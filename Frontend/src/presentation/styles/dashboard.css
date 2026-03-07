@@ -294,3 +294,29 @@
     max-width: 550px;
     box-shadow: 0 40px 100px -20px rgba(0, 0, 0, 0.8);
 }
+
+.scrollable-area {
+    max-height: 52vh;
+    overflow-y: auto;
+    padding-right: 12px;
+    margin-right: -12px;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
+}
+
+.scrollable-area::-webkit-scrollbar {
+    width: 6px;
+}
+
+.scrollable-area::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.scrollable-area::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+}
+
+.scrollable-area::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
