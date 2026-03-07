@@ -10,7 +10,7 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ message: 'Credenciales inválidas' }, { status: 400 });
         }
 
-        // Llamada Proxy al EndPoint de C# WebAPI
+        // Llamo a mi servicio de .NET para el login
         const netResponse = await fetch('http://localhost:5080/api/auth/login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -26,7 +26,7 @@ export async function POST(req: NextRequest) {
             );
         }
 
-        // Configurar sesión segura de Next.js almacenando JWT de .NET
+        // Guardo la sesión localmente
         const res = NextResponse.json({
             success: true,
             user: {
@@ -41,7 +41,7 @@ export async function POST(req: NextRequest) {
             id: data.idPersona.toString(),
             nombre: data.nombreCompleto,
             rol: data.rol,
-            token: data.token // Inyectamos el JWT de ASP.NET
+            token: data.token // El token que me dio el backend
         };
         await session.save();
 

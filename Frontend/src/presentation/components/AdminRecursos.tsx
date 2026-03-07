@@ -144,30 +144,30 @@ export default function AdminRecursos() {
                 <div className="card-grid">
                     {recursos.map(r => (
                         <div key={r.idRecurso} className="glass-card resource-card">
-                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.8rem' }}>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.6rem' }}>
                                 <div>
-                                    <h3 style={{ fontSize: '0.95rem', fontWeight: '700' }}>{r.nombre}</h3>
-                                    <span style={{ fontSize: '0.65rem', color: 'var(--text-muted)' }}>{r.tipo}</span>
+                                    <h3 style={{ fontSize: '0.9rem', fontWeight: '700' }}>{r.nombre}</h3>
+                                    <span style={{ fontSize: '0.6rem', color: 'var(--text-muted)' }}>{r.tipo}</span>
                                 </div>
-                                <span className={`tag-status tag-${r.estadoFisico.toLowerCase().replace(' ', '-')}`} style={{ padding: '0.2rem 0.6rem', fontSize: '0.65rem' }}>
+                                <span className={`tag-status tag-${r.estadoFisico.toLowerCase().replace(' ', '-')}`} style={{ padding: '0.15rem 0.5rem', fontSize: '0.6rem' }}>
                                     {r.estadoFisico}
                                 </span>
                             </div>
 
-                            <div style={{ marginBottom: '0.8rem' }}>
-                                <div className="resource-info" style={{ marginBottom: '0.3rem', fontSize: '0.8rem' }}>
+                            <div style={{ marginBottom: '0.6rem' }}>
+                                <div className="resource-info" style={{ marginBottom: '0.2rem', fontSize: '0.75rem' }}>
                                     <span className="label">Costo:</span>
                                     <span className="value">${r.costoPorReserva}</span>
                                 </div>
-                                <div className="resource-info" style={{ fontSize: '0.8rem' }}>
+                                <div className="resource-info" style={{ fontSize: '0.75rem' }}>
                                     <span className="label">ID:</span>
                                     <span className="value">#{r.idRecurso}</span>
                                 </div>
                             </div>
 
-                            <div className="card-actions" style={{ paddingTop: '0.8rem', gap: '0.4rem' }}>
-                                <button className="btn-secondary" style={{ padding: '0.4rem 0.7rem', fontSize: '0.7rem' }} onClick={() => handleEdit(r)}>Editar</button>
-                                <button className="btn-danger" style={{ padding: '0.4rem 0.7rem', fontSize: '0.7rem' }} onClick={() => handleDelete(r.idRecurso)}>Eliminar</button>
+                            <div className="card-actions" style={{ paddingTop: '0.6rem', gap: '0.4rem' }}>
+                                <button className="btn-secondary" style={{ padding: '0.35rem 0.6rem', fontSize: '0.65rem' }} onClick={() => handleEdit(r)}>Editar</button>
+                                <button className="btn-danger" style={{ padding: '0.35rem 0.6rem', fontSize: '0.65rem' }} onClick={() => handleDelete(r.idRecurso)}>Eliminar</button>
                             </div>
                         </div>
                     ))}

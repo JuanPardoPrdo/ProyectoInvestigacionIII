@@ -201,44 +201,44 @@ export default function ResidenteReservas({ userName }: { userName: string }) {
                     ) : (
                         filteredReservas.map((res: any) => (
                             <div key={res.idReserva} className="glass-card">
-                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.8rem' }}>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.6rem' }}>
                                     <div>
-                                        <h3 style={{ fontSize: '1rem', fontWeight: '700', marginBottom: '1px' }}>{res.recurso?.nombre}</h3>
-                                        <span style={{ fontSize: '0.65rem', color: 'var(--text-muted)' }}>
+                                        <h3 style={{ fontSize: '0.9rem', fontWeight: '700', marginBottom: '0px' }}>{res.recurso?.nombre}</h3>
+                                        <span style={{ fontSize: '0.6rem', color: 'var(--text-muted)' }}>
                                             ID: #{res.idReserva}
                                         </span>
                                     </div>
-                                    <span className={`tag-status tag-${res.estadoReserva.toLowerCase()}`} style={{ padding: '0.2rem 0.6rem', fontSize: '0.65rem' }}>
+                                    <span className={`tag-status tag-${res.estadoReserva.toLowerCase()}`} style={{ padding: '0.15rem 0.5rem', fontSize: '0.6rem' }}>
                                         {res.estadoReserva}
                                     </span>
                                 </div>
 
-                                <div style={{ marginBottom: '1rem', display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                                        <span style={{ fontSize: '0.75rem', color: '#94a3b8', width: '40px' }}>Inicia</span>
-                                        <span style={{ fontSize: '0.8rem', fontWeight: '500' }}>{new Date(res.fechaInicio).toLocaleString([], { dateStyle: 'short', timeStyle: 'short' })}</span>
+                                <div style={{ marginBottom: '0.6rem', display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                                        <span style={{ fontSize: '0.7rem', color: '#94a3b8', width: '35px' }}>Inicia</span>
+                                        <span style={{ fontSize: '0.75rem', fontWeight: '500' }}>{new Date(res.fechaInicio).toLocaleString([], { dateStyle: 'short', timeStyle: 'short' })}</span>
                                     </div>
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                                        <span style={{ fontSize: '0.75rem', color: '#94a3b8', width: '40px' }}>Termina</span>
-                                        <span style={{ fontSize: '0.8rem', fontWeight: '500' }}>{new Date(res.fechaFin).toLocaleString([], { dateStyle: 'short', timeStyle: 'short' })}</span>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                                        <span style={{ fontSize: '0.7rem', color: '#94a3b8', width: '35px' }}>Final</span>
+                                        <span style={{ fontSize: '0.75rem', fontWeight: '500' }}>{new Date(res.fechaFin).toLocaleString([], { dateStyle: 'short', timeStyle: 'short' })}</span>
                                     </div>
                                 </div>
 
-                                <div style={{ borderTop: '1px solid var(--glass-border)', paddingTop: '0.8rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 'auto' }}>
+                                <div style={{ borderTop: '1px solid var(--glass-border)', paddingTop: '0.6rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 'auto' }}>
                                     <div style={{ display: 'flex', flexDirection: 'column' }}>
-                                        <span style={{ fontSize: '0.6rem', color: 'var(--text-muted)', textTransform: 'uppercase' }}>Costo</span>
-                                        <span style={{ color: '#a5b4fc', fontSize: '1rem', fontWeight: '800' }}>
+                                        <span style={{ fontSize: '0.55rem', color: 'var(--text-muted)', textTransform: 'uppercase' }}>Costo</span>
+                                        <span style={{ color: '#a5b4fc', fontSize: '0.9rem', fontWeight: '800' }}>
                                             ${res.costoTotal}
                                         </span>
                                     </div>
-                                    <div style={{ display: 'flex', gap: '0.4rem' }}>
+                                    <div style={{ display: 'flex', gap: '0.3rem' }}>
                                         {res.idReserva && res.estadoReserva === 'Confirmada' && (
                                             <>
-                                                <button onClick={() => handleAbrirEdicion(res)} className="btn-secondary" style={{ padding: '0.4rem 0.7rem', fontSize: '0.7rem' }}>
+                                                <button onClick={() => handleAbrirEdicion(res)} className="btn-secondary" style={{ padding: '0.35rem 0.6rem', fontSize: '0.65rem' }}>
                                                     Editar
                                                 </button>
-                                                <button onClick={() => handleCancelar(res.idReserva)} className="btn-danger" style={{ padding: '0.4rem 0.7rem', fontSize: '0.7rem' }}>
-                                                    Cancelar
+                                                <button onClick={() => handleCancelar(res.idReserva)} className="btn-danger" style={{ padding: '0.35rem 0.6rem', fontSize: '0.65rem' }}>
+                                                    Anular
                                                 </button>
                                             </>
                                         )}

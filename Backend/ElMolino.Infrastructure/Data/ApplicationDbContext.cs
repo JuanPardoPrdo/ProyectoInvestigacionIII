@@ -22,7 +22,7 @@ namespace ElMolino.Infrastructure.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            // Relaciones y constraints
+            // Defino mis llaves primarias y relaciones
             modelBuilder.Entity<Unidad>().HasKey(u => u.IdUnidad);
             modelBuilder.Entity<Persona>().HasKey(p => p.IdPersona);
 
@@ -56,13 +56,13 @@ namespace ElMolino.Infrastructure.Data
                 .WithMany(res => res.Incidentes)
                 .HasForeignKey(i => i.IdReserva);
 
-            // Seeders
+            // Datos iniciales para pruebas
             modelBuilder.Entity<Unidad>().HasData(
                 new Unidad { IdUnidad = 1, NumeroUnidad = "A-101", BloqueTorre = "Edificio Central" },
                 new Unidad { IdUnidad = 2, NumeroUnidad = "A-102", BloqueTorre = "Edificio Central" }
             );
 
-            // Contraseñas hasheadas estáticas ("password123") precalculadas para evitar advertencia de PendingModelChanges
+            // Hash de "password123" para no renegar con cambios en el modelo de EF
             string staticHash = "$2a$11$SHIal0uurHUo5pOVK68iduvUzVamSn9tXomKKmkp61CJ2e/dsTc2W";
 
             modelBuilder.Entity<Persona>().HasData(
