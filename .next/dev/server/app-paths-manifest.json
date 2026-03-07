@@ -1,0 +1,11 @@
+{
+  "/_not-found/page": "app/_not-found/page.js",
+  "/admin/dashboard/page": "app/admin/dashboard/page.js",
+  "/api/auth/login/route": "app/api/auth/login/route.js",
+  "/api/auth/logout/route": "app/api/auth/logout/route.js",
+  "/api/recursos/route": "app/api/recursos/route.js",
+  "/api/reservas/[id]/route": "app/api/reservas/[id]/route.js",
+  "/api/reservas/route": "app/api/reservas/route.js",
+  "/login/page": "app/login/page.js",
+  "/residente/home/page": "app/residente/home/page.js"
+}

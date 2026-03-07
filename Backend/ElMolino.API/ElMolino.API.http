@@ -1,0 +1,6 @@
+@ElMolino.API_HostAddress = http://localhost:5080
+
+GET {{ElMolino.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

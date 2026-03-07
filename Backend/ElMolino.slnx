@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="ElMolino.API/ElMolino.API.csproj" />
+  <Project Path="ElMolino.Application/ElMolino.Application.csproj" />
+  <Project Path="ElMolino.Domain/ElMolino.Domain.csproj" />
+  <Project Path="ElMolino.Infrastructure/ElMolino.Infrastructure.csproj" />
+</Solution>
