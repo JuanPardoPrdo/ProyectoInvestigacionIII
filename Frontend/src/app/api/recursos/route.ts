@@ -24,6 +24,13 @@ export async function GET(req: NextRequest) {
         return NextResponse.json({ recursos: data.recursos }, { status: 200 });
 
     } catch (err: any) {
+        console.error('Proxy GET error:', err);
+        if (err.code === 'ECONNREFUSED') {
+            return NextResponse.json(
+                { message: 'Conexión rechazada: El servidor .NET (puerto 5080) está fuera de línea.' },
+                { status: 503 }
+            );
+        }
         return NextResponse.json({ message: 'Error interno del proxy de Next.' }, { status: 500 });
     }
 }
@@ -63,6 +70,12 @@ export async function POST(req: NextRequest) {
 
     } catch (err: any) {
         console.error('Proxy POST exception:', err);
+        if (err.code === 'ECONNREFUSED') {
+            return NextResponse.json(
+                { message: 'No se pudo completar la operación: El backend .NET no está disponible.' },
+                { status: 503 }
+            );
+        }
         return NextResponse.json({ message: 'Error interno del proxy de Next.', error: err.message }, { status: 500 });
     }
 }

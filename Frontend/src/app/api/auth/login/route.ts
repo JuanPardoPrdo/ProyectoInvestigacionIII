@@ -47,8 +47,16 @@ export async function POST(req: NextRequest) {
 
         return res;
 
-    } catch (err) {
+    } catch (err: any) {
         console.error('Login Proxy error:', err);
+
+        if (err.code === 'ECONNREFUSED') {
+            return NextResponse.json(
+                { message: 'El servidor de Backend (.NET) no responde. Asegúrate de ejecutarlo en el puerto 5080.' },
+                { status: 503 }
+            );
+        }
+
         return NextResponse.json({ message: 'Error interno conectando con el Backend' }, { status: 500 });
     }
 }
