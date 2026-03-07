@@ -19,11 +19,16 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
         });
 
         if (!netResponse.ok) {
-            const errorData = await netResponse.json();
-            return NextResponse.json(errorData, { status: netResponse.status });
+            const errorText = await netResponse.text();
+            try {
+                const errorData = JSON.parse(errorText);
+                return NextResponse.json(errorData, { status: netResponse.status });
+            } catch {
+                return NextResponse.json({ message: `Error del backend: ${netResponse.status}`, detail: errorText }, { status: netResponse.status });
+            }
         }
 
-        return NextResponse.json({ message: 'Recurso actualizado' }, { status: 200 });
+        return NextResponse.json({ message: 'Recurso actualizado con éxito' }, { status: 200 });
 
     } catch (err: any) {
         return NextResponse.json({ message: 'Error interno del proxy de Next.' }, { status: 500 });
