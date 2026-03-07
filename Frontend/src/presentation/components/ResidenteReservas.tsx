@@ -192,60 +192,62 @@ export default function ResidenteReservas({ userName }: { userName: string }) {
                 </div>
             </div>
 
-            <div className="card-grid">
-                {filteredReservas.length === 0 ? (
-                    <div style={{ gridColumn: '1/-1', textAlign: 'center', padding: '60px', background: 'rgba(255,255,255,0.02)', borderRadius: '24px', border: '1px dashed var(--glass-border)' }}>
-                        <p style={{ color: '#94a3b8' }}>No se encontraron registros de este tipo.</p>
-                    </div>
-                ) : (
-                    filteredReservas.map((res: any) => (
-                        <div key={res.idReserva} className="glass-card">
-                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem' }}>
-                                <div>
-                                    <h3 style={{ fontSize: '1.1rem', fontWeight: '700', marginBottom: '2px' }}>{res.recurso?.nombre}</h3>
-                                    <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', background: 'rgba(255,255,255,0.05)', padding: '1px 6px', borderRadius: '4px' }}>
-                                        ID: #{res.idReserva}
-                                    </span>
-                                </div>
-                                <span className={`tag-status tag-${res.estadoReserva.toLowerCase()}`} style={{ padding: '0.3rem 0.8rem', fontSize: '0.7rem' }}>
-                                    {res.estadoReserva}
-                                </span>
-                            </div>
-
-                            <div style={{ marginBottom: '1.2rem', display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                    <span style={{ fontSize: '0.8rem', color: '#94a3b8', width: '45px' }}>Desde</span>
-                                    <span style={{ fontSize: '0.85rem', fontWeight: '500' }}>{new Date(res.fechaInicio).toLocaleString([], { dateStyle: 'short', timeStyle: 'short' })}</span>
-                                </div>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                    <span style={{ fontSize: '0.8rem', color: '#94a3b8', width: '45px' }}>Hasta</span>
-                                    <span style={{ fontSize: '0.85rem', fontWeight: '500' }}>{new Date(res.fechaFin).toLocaleString([], { dateStyle: 'short', timeStyle: 'short' })}</span>
-                                </div>
-                            </div>
-
-                            <div style={{ borderTop: '1px solid var(--glass-border)', paddingTop: '1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 'auto' }}>
-                                <div style={{ display: 'flex', flexDirection: 'column' }}>
-                                    <span style={{ fontSize: '0.65rem', color: 'var(--text-muted)', textTransform: 'uppercase' }}>Costo</span>
-                                    <span style={{ color: '#a5b4fc', fontSize: '1.1rem', fontWeight: '800' }}>
-                                        ${res.costoTotal}
-                                    </span>
-                                </div>
-                                <div style={{ display: 'flex', gap: '0.5rem' }}>
-                                    {res.idReserva && res.estadoReserva === 'Confirmada' && (
-                                        <>
-                                            <button onClick={() => handleAbrirEdicion(res)} className="btn-secondary" style={{ padding: '0.5rem 0.8rem', fontSize: '0.75rem' }}>
-                                                Editar
-                                            </button>
-                                            <button onClick={() => handleCancelar(res.idReserva)} className="btn-danger" style={{ padding: '0.5rem 0.8rem', fontSize: '0.75rem' }}>
-                                                Cancelar
-                                            </button>
-                                        </>
-                                    )}
-                                </div>
-                            </div>
+            <div className="scrollable-area">
+                <div className="card-grid">
+                    {filteredReservas.length === 0 ? (
+                        <div style={{ gridColumn: '1/-1', textAlign: 'center', padding: '40px', background: 'rgba(255,255,255,0.02)', borderRadius: '24px', border: '1px dashed var(--glass-border)' }}>
+                            <p style={{ color: '#94a3b8' }}>No se encontraron registros de este tipo.</p>
                         </div>
-                    ))
-                )}
+                    ) : (
+                        filteredReservas.map((res: any) => (
+                            <div key={res.idReserva} className="glass-card">
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.8rem' }}>
+                                    <div>
+                                        <h3 style={{ fontSize: '1rem', fontWeight: '700', marginBottom: '1px' }}>{res.recurso?.nombre}</h3>
+                                        <span style={{ fontSize: '0.65rem', color: 'var(--text-muted)' }}>
+                                            ID: #{res.idReserva}
+                                        </span>
+                                    </div>
+                                    <span className={`tag-status tag-${res.estadoReserva.toLowerCase()}`} style={{ padding: '0.2rem 0.6rem', fontSize: '0.65rem' }}>
+                                        {res.estadoReserva}
+                                    </span>
+                                </div>
+
+                                <div style={{ marginBottom: '1rem', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                        <span style={{ fontSize: '0.75rem', color: '#94a3b8', width: '40px' }}>Inicia</span>
+                                        <span style={{ fontSize: '0.8rem', fontWeight: '500' }}>{new Date(res.fechaInicio).toLocaleString([], { dateStyle: 'short', timeStyle: 'short' })}</span>
+                                    </div>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                        <span style={{ fontSize: '0.75rem', color: '#94a3b8', width: '40px' }}>Termina</span>
+                                        <span style={{ fontSize: '0.8rem', fontWeight: '500' }}>{new Date(res.fechaFin).toLocaleString([], { dateStyle: 'short', timeStyle: 'short' })}</span>
+                                    </div>
+                                </div>
+
+                                <div style={{ borderTop: '1px solid var(--glass-border)', paddingTop: '0.8rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 'auto' }}>
+                                    <div style={{ display: 'flex', flexDirection: 'column' }}>
+                                        <span style={{ fontSize: '0.6rem', color: 'var(--text-muted)', textTransform: 'uppercase' }}>Costo</span>
+                                        <span style={{ color: '#a5b4fc', fontSize: '1rem', fontWeight: '800' }}>
+                                            ${res.costoTotal}
+                                        </span>
+                                    </div>
+                                    <div style={{ display: 'flex', gap: '0.4rem' }}>
+                                        {res.idReserva && res.estadoReserva === 'Confirmada' && (
+                                            <>
+                                                <button onClick={() => handleAbrirEdicion(res)} className="btn-secondary" style={{ padding: '0.4rem 0.7rem', fontSize: '0.7rem' }}>
+                                                    Editar
+                                                </button>
+                                                <button onClick={() => handleCancelar(res.idReserva)} className="btn-danger" style={{ padding: '0.4rem 0.7rem', fontSize: '0.7rem' }}>
+                                                    Cancelar
+                                                </button>
+                                            </>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+                        ))
+                    )}
+                </div>
             </div>
 
             {isModalOpen && (

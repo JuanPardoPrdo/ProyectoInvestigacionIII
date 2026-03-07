@@ -140,36 +140,38 @@ export default function AdminRecursos() {
                 </div>
             </div>
 
-            <div className="card-grid">
-                {recursos.map(r => (
-                    <div key={r.idRecurso} className="glass-card resource-card">
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem' }}>
-                            <div>
-                                <h3 style={{ fontSize: '1rem', fontWeight: '700' }}>{r.nombre}</h3>
-                                <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>{r.tipo}</span>
+            <div className="scrollable-area">
+                <div className="card-grid">
+                    {recursos.map(r => (
+                        <div key={r.idRecurso} className="glass-card resource-card">
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.8rem' }}>
+                                <div>
+                                    <h3 style={{ fontSize: '0.95rem', fontWeight: '700' }}>{r.nombre}</h3>
+                                    <span style={{ fontSize: '0.65rem', color: 'var(--text-muted)' }}>{r.tipo}</span>
+                                </div>
+                                <span className={`tag-status tag-${r.estadoFisico.toLowerCase().replace(' ', '-')}`} style={{ padding: '0.2rem 0.6rem', fontSize: '0.65rem' }}>
+                                    {r.estadoFisico}
+                                </span>
                             </div>
-                            <span className={`tag-status tag-${r.estadoFisico.toLowerCase().replace(' ', '-')}`} style={{ padding: '0.3rem 0.8rem', fontSize: '0.7rem' }}>
-                                {r.estadoFisico}
-                            </span>
-                        </div>
 
-                        <div style={{ marginBottom: '1.2rem' }}>
-                            <div className="resource-info">
-                                <span className="label">Costo:</span>
-                                <span className="value">${r.costoPorReserva}</span>
+                            <div style={{ marginBottom: '0.8rem' }}>
+                                <div className="resource-info" style={{ marginBottom: '0.3rem', fontSize: '0.8rem' }}>
+                                    <span className="label">Costo:</span>
+                                    <span className="value">${r.costoPorReserva}</span>
+                                </div>
+                                <div className="resource-info" style={{ fontSize: '0.8rem' }}>
+                                    <span className="label">ID:</span>
+                                    <span className="value">#{r.idRecurso}</span>
+                                </div>
                             </div>
-                            <div className="resource-info">
-                                <span className="label">ID Sistema:</span>
-                                <span className="value">#{r.idRecurso}</span>
-                            </div>
-                        </div>
 
-                        <div className="card-actions" style={{ paddingTop: '1rem', gap: '0.5rem' }}>
-                            <button className="btn-secondary" style={{ padding: '0.5rem 0.8rem', fontSize: '0.75rem' }} onClick={() => handleEdit(r)}>Editar</button>
-                            <button className="btn-danger" style={{ padding: '0.5rem 0.8rem', fontSize: '0.75rem' }} onClick={() => handleDelete(r.idRecurso)}>Eliminar</button>
+                            <div className="card-actions" style={{ paddingTop: '0.8rem', gap: '0.4rem' }}>
+                                <button className="btn-secondary" style={{ padding: '0.4rem 0.7rem', fontSize: '0.7rem' }} onClick={() => handleEdit(r)}>Editar</button>
+                                <button className="btn-danger" style={{ padding: '0.4rem 0.7rem', fontSize: '0.7rem' }} onClick={() => handleDelete(r.idRecurso)}>Eliminar</button>
+                            </div>
                         </div>
-                    </div>
-                ))}
+                    ))}
+                </div>
             </div>
 
             {isModalOpen && (
