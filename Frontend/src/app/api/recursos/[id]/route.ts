@@ -1,15 +1,16 @@
 import { NextResponse, NextRequest } from 'next/server';
 import { getSession } from '@/infrastructure/auth/getServerSession';
 
-export async function PUT(req: NextRequest, { params }: { params: { id: string } }) {
+export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
     try {
+        const { id } = await params;
         const session = await getSession();
         if (!session?.user?.token || session.user.rol !== 'Administrador') {
             return NextResponse.json({ message: 'No autorizado' }, { status: 401 });
         }
 
         const body = await req.json();
-        const netResponse = await fetch(`http://localhost:5080/api/recursos/${params.id}`, {
+        const netResponse = await fetch(`http://localhost:5080/api/recursos/${id}`, {
             method: 'PUT',
             headers: {
                 'Authorization': `Bearer ${session.user.token}`,
@@ -35,14 +36,15 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
     }
 }
 
-export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
     try {
+        const { id } = await params;
         const session = await getSession();
         if (!session?.user?.token || session.user.rol !== 'Administrador') {
             return NextResponse.json({ message: 'No autorizado' }, { status: 401 });
         }
 
-        const netResponse = await fetch(`http://localhost:5080/api/recursos/${params.id}`, {
+        const netResponse = await fetch(`http://localhost:5080/api/recursos/${id}`, {
             method: 'DELETE',
             headers: {
                 'Authorization': `Bearer ${session.user.token}`,
