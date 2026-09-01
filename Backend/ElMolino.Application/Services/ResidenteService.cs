@@ -192,5 +192,75 @@ namespace ElMolino.Application.Services
                 })
                 .ToListAsync();
         }
+
+        public async Task<UnidadDto> CrearUnidadAsync(CrearUnidadRequestDto request)
+        {
+            var existe = await _context.Unidades.AnyAsync(u => 
+                u.NumeroUnidad == request.NumeroUnidad && 
+                (u.BloqueTorre ?? "") == (request.BloqueTorre ?? ""));
+
+            if (existe)
+            {
+                throw new Exception("Ya existe una unidad residencial registrada con este número y bloque/torre.");
+            }
+
+            var nuevaUnidad = new Unidad
+            {
+                NumeroUnidad = request.NumeroUnidad,
+                BloqueTorre = request.BloqueTorre
+            };
+
+            _context.Unidades.Add(nuevaUnidad);
+            await _context.SaveChangesAsync();
+
+            return new UnidadDto
+            {
+                IdUnidad = nuevaUnidad.IdUnidad,
+                NumeroUnidad = nuevaUnidad.NumeroUnidad,
+                BloqueTorre = nuevaUnidad.BloqueTorre
+            };
+        }
+
+        public async Task ActualizarUnidadAsync(int id, ActualizarUnidadRequestDto request)
+        {
+            var unidad = await _context.Unidades.FindAsync(id);
+            if (unidad == null)
+            {
+                throw new Exception("Unidad residencial no encontrada.");
+            }
+
+            var existe = await _context.Unidades.AnyAsync(u => 
+                u.IdUnidad != id && 
+                u.NumeroUnidad == request.NumeroUnidad && 
+                (u.BloqueTorre ?? "") == (request.BloqueTorre ?? ""));
+
+            if (existe)
+            {
+                throw new Exception("Ya existe otra unidad residencial con este número y bloque/torre.");
+            }
+
+            unidad.NumeroUnidad = request.NumeroUnidad;
+            unidad.BloqueTorre = request.BloqueTorre;
+
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task EliminarUnidadAsync(int id)
+        {
+            var unidad = await _context.Unidades.FindAsync(id);
+            if (unidad == null)
+            {
+                throw new Exception("Unidad residencial no encontrada.");
+            }
+
+            var tienePersonas = await _context.Personas.AnyAsync(p => p.IdUnidad == id);
+            if (tienePersonas)
+            {
+                throw new Exception("No se puede eliminar la unidad residencial porque tiene residentes o propietarios asignados.");
+            }
+
+            _context.Unidades.Remove(unidad);
+            await _context.SaveChangesAsync();
+        }
     }
 }

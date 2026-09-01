@@ -10,5 +10,8 @@ namespace ElMolino.Application.Interfaces
         Task ActualizarResidenteAsync(int id, ActualizarResidenteRequestDto request);
         Task EliminarResidenteAsync(int id);
         Task<List<UnidadDto>> ObtenerUnidadesAsync();
+        Task<UnidadDto> CrearUnidadAsync(CrearUnidadRequestDto request);
+        Task ActualizarUnidadAsync(int id, ActualizarUnidadRequestDto request);
+        Task EliminarUnidadAsync(int id);
     }
 }

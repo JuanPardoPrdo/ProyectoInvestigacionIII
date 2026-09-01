@@ -7,6 +7,18 @@ namespace ElMolino.Application.DTOs
         public string? BloqueTorre { get; set; }
     }
 
+    public class CrearUnidadRequestDto
+    {
+        public required string NumeroUnidad { get; set; }
+        public string? BloqueTorre { get; set; }
+    }
+
+    public class ActualizarUnidadRequestDto
+    {
+        public required string NumeroUnidad { get; set; }
+        public string? BloqueTorre { get; set; }
+    }
+
     public class ResidenteDto
     {
         public int IdPersona { get; set; }

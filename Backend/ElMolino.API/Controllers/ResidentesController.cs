@@ -31,6 +31,48 @@ namespace ElMolino.API.Controllers
             return Ok(new { unidades });
         }
 
+        [HttpPost("unidades")]
+        public async Task<IActionResult> CrearUnidad([FromBody] CrearUnidadRequestDto request)
+        {
+            try
+            {
+                var unidad = await _residenteService.CrearUnidadAsync(request);
+                return Ok(new { message = "Unidad residencial creada exitosamente", unidad });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
+        [HttpPut("unidades/{id}")]
+        public async Task<IActionResult> ActualizarUnidad(int id, [FromBody] ActualizarUnidadRequestDto request)
+        {
+            try
+            {
+                await _residenteService.ActualizarUnidadAsync(id, request);
+                return Ok(new { message = "Unidad residencial actualizada exitosamente" });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
+        [HttpDelete("unidades/{id}")]
+        public async Task<IActionResult> EliminarUnidad(int id)
+        {
+            try
+            {
+                await _residenteService.EliminarUnidadAsync(id);
+                return Ok(new { message = "Unidad residencial eliminada exitosamente" });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
         [HttpGet("{id}")]
         public async Task<IActionResult> GetResidente(int id)
         {
