@@ -56,6 +56,10 @@ namespace ElMolino.Infrastructure.Data
                 .WithMany(res => res.Incidentes)
                 .HasForeignKey(i => i.IdReserva);
 
+            modelBuilder.Entity<Incidente>()
+                .Property(i => i.IdMovimiento)
+                .IsRequired(false);
+
             // Datos iniciales para pruebas
             modelBuilder.Entity<Unidad>().HasData(
                 new Unidad { IdUnidad = 1, NumeroUnidad = "A-101", BloqueTorre = "Edificio Central" },

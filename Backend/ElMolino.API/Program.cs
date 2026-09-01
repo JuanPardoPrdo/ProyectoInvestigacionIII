@@ -19,6 +19,7 @@ builder.Services.AddScoped<ElMolino.Application.Interfaces.IAuthService, ElMolin
 builder.Services.AddScoped<ElMolino.Application.Interfaces.IReservaService, ElMolino.Application.Services.ReservaService>();
 builder.Services.AddScoped<ElMolino.Application.Interfaces.IRecursoService, ElMolino.Application.Services.RecursoService>();
 builder.Services.AddScoped<ElMolino.Application.Interfaces.IResidenteService, ElMolino.Application.Services.ResidenteService>();
+builder.Services.AddScoped<ElMolino.Application.Interfaces.IMultaService, ElMolino.Application.Services.MultaService>();
 builder.Services.AddScoped<ElMolino.Application.Interfaces.IApplicationDbContext>(provider => provider.GetRequiredService<ApplicationDbContext>());
 
 // CORS for Next.js

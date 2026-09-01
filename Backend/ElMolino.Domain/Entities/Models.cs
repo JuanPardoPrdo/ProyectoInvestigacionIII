@@ -72,6 +72,7 @@ namespace ElMolino.Domain.Entities
         public required string DescripcionDano { get; set; }
         public decimal CostoReparacion { get; set; }
         public DateTime FechaReporte { get; set; } = new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+        public int? IdMovimiento { get; set; }
 
         public Reserva Reserva { get; set; } = null!;
     }
