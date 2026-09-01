@@ -1,6 +1,6 @@
 import { getSession } from '@/infrastructure/auth/getServerSession';
 import { redirect } from 'next/navigation';
-import AdminRecursos from '@/presentation/components/AdminRecursos';
+import AdminTabs from '@/presentation/components/AdminTabs';
 
 export default async function AdminDashboard() {
     const session = await getSession();
@@ -11,7 +11,7 @@ export default async function AdminDashboard() {
 
     return (
         <div className="dashboard-container">
-            <AdminRecursos />
+            <AdminTabs />
 
             <form action="/api/auth/logout" method="POST" style={{ marginTop: '40px', borderTop: '1px solid var(--glass-border)', paddingTop: '20px' }}>
                 <button type="submit" className="btn-danger">
