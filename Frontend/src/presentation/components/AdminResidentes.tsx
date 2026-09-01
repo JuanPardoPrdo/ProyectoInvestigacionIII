@@ -13,7 +13,13 @@ export default function AdminResidentes() {
     const [error, setError] = useState('');
     const [busqueda, setBusqueda] = useState('');
 
-    // Form State
+    // Unit Modal State
+    const [isUnidadModalOpen, setIsUnidadModalOpen] = useState(false);
+    const [nuevoNumeroUnidad, setNuevoNumeroUnidad] = useState('');
+    const [nuevoBloqueTorre, setNuevoBloqueTorre] = useState('');
+    const [unidadError, setUnidadError] = useState('');
+
+    // Form State (Residente)
     const [idUnidad, setIdUnidad] = useState<number | string>('');
     const [nombreCompleto, setNombreCompleto] = useState('');
     const [documento, setDocumento] = useState('');
@@ -67,7 +73,7 @@ export default function AdminResidentes() {
         setNombreCompleto(r.nombreCompleto);
         setDocumento(r.documento);
         setEmail(r.email || '');
-        setPassword(''); // Password blank unless wanting to update it
+        setPassword('');
         setRol(r.rol);
         setEstado(r.estado);
         setError('');
@@ -122,6 +128,46 @@ export default function AdminResidentes() {
         }
     };
 
+    const handleCrearUnidad = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setUnidadError('');
+
+        if (!nuevoNumeroUnidad.trim()) {
+            setUnidadError('El número de unidad es requerido.');
+            return;
+        }
+
+        try {
+            const res = await fetch('/api/residentes/unidades', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    numeroUnidad: nuevoNumeroUnidad.trim(),
+                    bloqueTorre: nuevoBloqueTorre.trim() || undefined
+                })
+            });
+
+            const data = await res.json();
+            if (!res.ok) {
+                setUnidadError(data.message || 'Error al registrar unidad residencial.');
+                return;
+            }
+
+            const resUni = await fetch('/api/residentes/unidades').then(r => r.json());
+            setUnidades(resUni.unidades || []);
+
+            if (data.unidad?.idUnidad) {
+                setIdUnidad(data.unidad.idUnidad);
+            }
+
+            setIsUnidadModalOpen(false);
+            setNuevoNumeroUnidad('');
+            setNuevoBloqueTorre('');
+        } catch (err) {
+            setUnidadError('Error al conectar con el servidor.');
+        }
+    };
+
     const handleDelete = async (id: number) => {
         if (!confirm('¿Está seguro de eliminar este residente? Esta acción es irreversible.')) return;
         try {
@@ -165,9 +211,22 @@ export default function AdminResidentes() {
                         Padrón Residencial — {new Date().toLocaleDateString()}
                     </div>
                 </div>
-                <button className="btn-primary" onClick={handleOpenCreate}>
-                    + Registrar Residente
-                </button>
+                <div style={{ display: 'flex', gap: '0.6rem' }}>
+                    <button
+                        className="btn-secondary"
+                        onClick={() => {
+                            setUnidadError('');
+                            setNuevoNumeroUnidad('');
+                            setNuevoBloqueTorre('');
+                            setIsUnidadModalOpen(true);
+                        }}
+                    >
+                        + Nueva Unidad
+                    </button>
+                    <button className="btn-primary" onClick={handleOpenCreate}>
+                        + Registrar Residente
+                    </button>
+                </div>
             </div>
 
             <div className="stats-container">
@@ -251,6 +310,7 @@ export default function AdminResidentes() {
                 </div>
             </div>
 
+            {/* Modal para Registrar / Editar Residente */}
             {isModalOpen && (
                 <div className="modal-overlay">
                     <div className="modal-content">
@@ -283,7 +343,29 @@ export default function AdminResidentes() {
                                     />
                                 </div>
                                 <div>
-                                    <label className="form-label">Unidad Residencial</label>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+                                        <label className="form-label" style={{ margin: 0 }}>Unidad Residencial</label>
+                                        <button
+                                            type="button"
+                                            onClick={() => {
+                                                setUnidadError('');
+                                                setNuevoNumeroUnidad('');
+                                                setNuevoBloqueTorre('');
+                                                setIsUnidadModalOpen(true);
+                                            }}
+                                            style={{
+                                                background: 'transparent',
+                                                color: 'var(--secondary)',
+                                                border: 'none',
+                                                cursor: 'pointer',
+                                                fontSize: '0.75rem',
+                                                fontWeight: 600,
+                                                textDecoration: 'underline'
+                                            }}
+                                        >
+                                            + Crear Unidad
+                                        </button>
+                                    </div>
                                     <select
                                         className="form-input"
                                         required
@@ -351,6 +433,64 @@ export default function AdminResidentes() {
                                 </button>
                                 <button type="submit" className="btn-primary">
                                     {idPersonaEditando ? 'Guardar Cambios' : 'Registrar Residente'}
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            )}
+
+            {/* Modal para Registrar Nueva Unidad Residencial */}
+            {isUnidadModalOpen && (
+                <div className="modal-overlay" style={{ zIndex: 110 }}>
+                    <div className="modal-content" style={{ maxWidth: '460px' }}>
+                        <h2 style={{ marginBottom: '1.5rem', textAlign: 'center', fontSize: '1.4rem', fontWeight: '800' }}>
+                            Registrar Unidad Residencial
+                        </h2>
+                        <form onSubmit={handleCrearUnidad}>
+                            <div style={{ marginBottom: '1.2rem' }}>
+                                <label className="form-label">Número de Unidad (Apto / Casa)</label>
+                                <input
+                                    className="form-input"
+                                    type="text"
+                                    required
+                                    value={nuevoNumeroUnidad}
+                                    onChange={e => setNuevoNumeroUnidad(e.target.value)}
+                                    placeholder="Ej: A-103, Casa 14, 302..."
+                                />
+                            </div>
+
+                            <div style={{ marginBottom: '1.5rem' }}>
+                                <label className="form-label">Bloque o Torre (Opcional)</label>
+                                <input
+                                    className="form-input"
+                                    type="text"
+                                    value={nuevoBloqueTorre}
+                                    onChange={e => setNuevoBloqueTorre(e.target.value)}
+                                    placeholder="Ej: Edificio Central, Torre 2..."
+                                />
+                            </div>
+
+                            {unidadError && (
+                                <div className="error-box" style={{ background: 'rgba(239, 68, 68, 0.1)', border: '1px solid rgba(239, 68, 68, 0.2)', color: '#fca5a5', padding: '10px', borderRadius: '10px', marginBottom: '1.2rem', fontSize: '0.85rem', textAlign: 'center' }}>
+                                    {unidadError}
+                                </div>
+                            )}
+
+                            <div className="modal-footer" style={{ display: 'flex', justifyContent: 'flex-end', gap: '1rem' }}>
+                                <button
+                                    type="button"
+                                    className="btn-text"
+                                    onClick={() => {
+                                        setIsUnidadModalOpen(false);
+                                        setUnidadError('');
+                                    }}
+                                    style={{ background: 'transparent', color: 'var(--text-muted)', border: 'none', cursor: 'pointer', padding: '0.6rem 1.2rem' }}
+                                >
+                                    Descartar
+                                </button>
+                                <button type="submit" className="btn-primary">
+                                    Guardar Unidad
                                 </button>
                             </div>
                         </form>

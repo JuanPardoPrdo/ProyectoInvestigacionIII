@@ -16,6 +16,16 @@ export interface Unidad {
     bloqueTorre?: string;
 }
 
+export interface CrearUnidadDto {
+    numeroUnidad: string;
+    bloqueTorre?: string;
+}
+
+export interface ActualizarUnidadDto {
+    numeroUnidad: string;
+    bloqueTorre?: string;
+}
+
 export interface CrearResidenteDto {
     idUnidad: number;
     nombreCompleto: string;
