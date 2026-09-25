@@ -15,7 +15,7 @@ export default async function AdminDashboard() {
 
             <form action="/api/auth/logout" method="POST" style={{ marginTop: '40px', borderTop: '1px solid var(--glass-border)', paddingTop: '20px' }}>
                 <button type="submit" className="btn-danger">
-                    Cerrar Sesión Progresiva
+                    Cerrar Sesión
                 </button>
             </form>
         </div>
