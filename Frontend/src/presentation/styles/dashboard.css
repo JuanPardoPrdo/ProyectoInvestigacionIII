@@ -12,12 +12,30 @@
     --danger: #ef4444;
 }
 
+html {
+    overflow-y: auto !important;
+    height: auto;
+    background: #0f172a;
+}
+
+body {
+    overflow-y: auto !important;
+    overflow-x: hidden;
+    min-height: 100vh;
+    display: block !important;
+    background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%) !important;
+    background-attachment: fixed !important;
+    color: var(--text-main) !important;
+}
+
 .dashboard-container {
     padding: 2rem;
+    padding-bottom: 6rem;
     color: var(--text-main);
     max-width: 1440px;
     margin: 0 auto;
     font-family: 'Inter', sans-serif;
+    min-height: 100vh;
 }
 
 .dashboard-header {
@@ -82,9 +100,10 @@
 
 .card-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-    gap: 1rem;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 1.25rem;
     margin-bottom: 2rem;
+    padding-bottom: 1rem;
 }
 
 .glass-card {
@@ -93,12 +112,13 @@
     -webkit-backdrop-filter: blur(16px);
     border: 1px solid var(--glass-border);
     border-radius: 12px;
-    padding: 0.85rem;
+    padding: 1rem;
     position: relative;
-    overflow: hidden;
+    overflow: visible;
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     display: flex;
     flex-direction: column;
+    min-height: fit-content;
 }
 
 .glass-card::before {
@@ -111,6 +131,8 @@
     background: linear-gradient(90deg, transparent, var(--primary), transparent);
     opacity: 0;
     transition: opacity 0.3s;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
 }
 
 .glass-card:hover {
@@ -296,29 +318,9 @@
 }
 
 .scrollable-area {
-    max-height: 52vh;
-    overflow-y: auto;
-    padding-right: 12px;
-    margin-right: -12px;
-    scrollbar-width: thin;
-    scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
-}
-
-.scrollable-area::-webkit-scrollbar {
-    width: 6px;
-}
-
-.scrollable-area::-webkit-scrollbar-track {
-    background: transparent;
-}
-
-.scrollable-area::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 10px;
-}
-
-.scrollable-area::-webkit-scrollbar-thumb:hover {
-    background: rgba(255, 255, 255, 0.2);
+    width: 100%;
+    padding-top: 0.5rem;
+    padding-bottom: 2.5rem;
 }
 
 /* Resident Status Tags */

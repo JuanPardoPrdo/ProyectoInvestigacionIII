@@ -45,7 +45,7 @@ export default function LoginPage() {
     };
 
     return (
-        <>
+        <div className="login-page-wrapper">
             <div className="bg-circle bg-circle-1"></div>
             <div className="bg-circle bg-circle-2"></div>
 
@@ -96,6 +96,6 @@ export default function LoginPage() {
                     </button>
                 </form>
             </div>
-        </>
+        </div>
     );
 }
