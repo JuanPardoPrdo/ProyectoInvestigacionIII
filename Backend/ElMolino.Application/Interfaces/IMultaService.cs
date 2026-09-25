@@ -6,6 +6,7 @@ namespace ElMolino.Application.Interfaces
     {
         Task<List<MultaDto>> ObtenerMultasAsync();
         Task<MultaDto> CrearMultaAsync(CrearMultaRequestDto request);
+        Task<MultaDto> EditarMultaAsync(int idIncidente, EditarMultaRequestDto request);
         Task MarcarPagadaAsync(int idIncidente);
         Task EliminarMultaAsync(int idIncidente);
     }

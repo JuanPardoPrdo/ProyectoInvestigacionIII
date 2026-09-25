@@ -18,3 +18,9 @@ export interface CrearMultaDto {
     descripcionDano: string;
     montoMulta: number;
 }
+
+export interface EditarMultaDto {
+    idReserva: number;
+    descripcionDano: string;
+    montoMulta: number;
+}

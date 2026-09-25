@@ -111,6 +111,82 @@ namespace ElMolino.Application.Services
             };
         }
 
+        public async Task<MultaDto> EditarMultaAsync(int idIncidente, EditarMultaRequestDto request)
+        {
+            var incidente = await _context.Incidentes
+                .Include(i => i.Reserva)
+                    .ThenInclude(r => r.Persona)
+                .Include(i => i.Reserva)
+                    .ThenInclude(r => r.Recurso)
+                .FirstOrDefaultAsync(i => i.IdIncidente == idIncidente);
+
+            if (incidente == null)
+                throw new InvalidOperationException("La multa especificada no existe.");
+
+            if (request.MontoMulta <= 0)
+                throw new InvalidOperationException("El monto de la multa debe ser mayor a cero.");
+
+            if (string.IsNullOrWhiteSpace(request.DescripcionDano))
+                throw new InvalidOperationException("La descripción del daño es requerida.");
+
+            EstadoCuenta? movimiento = null;
+            if (incidente.IdMovimiento.HasValue)
+            {
+                movimiento = await _context.EstadosCuenta
+                    .FirstOrDefaultAsync(ec => ec.IdMovimiento == incidente.IdMovimiento.Value);
+
+                if (movimiento != null && movimiento.Pagado)
+                    throw new InvalidOperationException("No se puede editar una multa que ya ha sido marcada como pagada.");
+            }
+
+            var reserva = incidente.Reserva;
+            if (incidente.IdReserva != request.IdReserva)
+            {
+                var nuevaReserva = await _context.Reservas
+                    .Include(r => r.Persona)
+                    .Include(r => r.Recurso)
+                    .FirstOrDefaultAsync(r => r.IdReserva == request.IdReserva);
+
+                if (nuevaReserva == null)
+                    throw new InvalidOperationException("La reserva especificada no existe.");
+
+                reserva = nuevaReserva;
+                incidente.IdReserva = nuevaReserva.IdReserva;
+
+                if (movimiento != null)
+                {
+                    movimiento.IdPersona = nuevaReserva.IdPersona;
+                    movimiento.Concepto = $"Multa por uso indebido - {nuevaReserva.Recurso.Nombre}";
+                }
+            }
+
+            incidente.DescripcionDano = request.DescripcionDano.Trim();
+            incidente.CostoReparacion = request.MontoMulta;
+
+            if (movimiento != null)
+            {
+                movimiento.Monto = request.MontoMulta;
+            }
+
+            await _context.SaveChangesAsync();
+
+            return new MultaDto
+            {
+                IdIncidente = incidente.IdIncidente,
+                IdReserva = incidente.IdReserva,
+                IdPersona = reserva.IdPersona,
+                NombreResidente = reserva.Persona.NombreCompleto,
+                DocumentoResidente = reserva.Persona.Documento,
+                NombreRecurso = reserva.Recurso.Nombre,
+                DescripcionDano = incidente.DescripcionDano,
+                MontoMulta = incidente.CostoReparacion,
+                FechaReporte = incidente.FechaReporte,
+                Pagado = movimiento?.Pagado ?? false,
+                FechaPago = movimiento?.FechaPago,
+                IdMovimiento = incidente.IdMovimiento
+            };
+        }
+
         public async Task MarcarPagadaAsync(int idIncidente)
         {
             var incidente = await _context.Incidentes
@@ -152,7 +228,12 @@ namespace ElMolino.Application.Services
                     .FirstOrDefaultAsync(ec => ec.IdMovimiento == incidente.IdMovimiento.Value);
 
                 if (movimiento != null)
+                {
+                    if (movimiento.Pagado)
+                        throw new InvalidOperationException("No se puede eliminar una multa que ya ha sido pagada.");
+
                     _context.EstadosCuenta.Remove(movimiento);
+                }
             }
 
             _context.Incidentes.Remove(incidente);

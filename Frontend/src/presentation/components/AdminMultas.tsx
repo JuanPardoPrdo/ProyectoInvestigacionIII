@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import '@/presentation/styles/dashboard.css';
-import { Multa, CrearMultaDto } from '@/domain/entities/Multa';
+import { Multa, CrearMultaDto, EditarMultaDto } from '@/domain/entities/Multa';
 
 interface ReservaResumen {
     idReserva: number;
@@ -24,6 +24,7 @@ export default function AdminMultas() {
 
     // Modal state
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [multaEditando, setMultaEditando] = useState<Multa | null>(null);
     const [idReserva, setIdReserva] = useState<number | string>('');
     const [descripcionDano, setDescripcionDano] = useState('');
     const [montoMulta, setMontoMulta] = useState<number | string>('');
@@ -49,6 +50,7 @@ export default function AdminMultas() {
     }, []);
 
     const handleOpenModal = () => {
+        setMultaEditando(null);
         setIdReserva('');
         setDescripcionDano('');
         setMontoMulta('');
@@ -56,7 +58,16 @@ export default function AdminMultas() {
         setIsModalOpen(true);
     };
 
-    const handleCrearMulta = async (e: React.FormEvent) => {
+    const handleAbrirEditar = (m: Multa) => {
+        setMultaEditando(m);
+        setIdReserva(m.idReserva);
+        setDescripcionDano(m.descripcionDano);
+        setMontoMulta(m.montoMulta);
+        setError('');
+        setIsModalOpen(true);
+    };
+
+    const handleGuardarMulta = async (e: React.FormEvent) => {
         e.preventDefault();
         setError('');
 
@@ -74,25 +85,30 @@ export default function AdminMultas() {
         }
 
         try {
-            const payload: CrearMultaDto = {
+            const payload: CrearMultaDto | EditarMultaDto = {
                 idReserva: Number(idReserva),
                 descripcionDano: descripcionDano.trim(),
                 montoMulta: Number(montoMulta)
             };
 
-            const res = await fetch('/api/multas', {
-                method: 'POST',
+            const isEditing = multaEditando !== null;
+            const url = isEditing ? `/api/multas/${multaEditando.idIncidente}` : '/api/multas';
+            const method = isEditing ? 'PUT' : 'POST';
+
+            const res = await fetch(url, {
+                method,
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload)
             });
 
             const data = await res.json();
             if (!res.ok) {
-                setError(data.message || 'Error al registrar la multa.');
+                setError(data.message || (isEditing ? 'Error al actualizar la multa.' : 'Error al registrar la multa.'));
                 return;
             }
 
             setIsModalOpen(false);
+            setMultaEditando(null);
             fetchDatos();
         } catch (err) {
             setError('Error al conectar con el servidor.');
@@ -266,22 +282,35 @@ export default function AdminMultas() {
                                 </div>
 
                                 <div className="card-actions" style={{ paddingTop: '0.6rem', gap: '0.4rem' }}>
-                                    {!m.pagado && (
-                                        <button
-                                            className="btn-secondary"
-                                            style={{ padding: '0.35rem 0.6rem', fontSize: '0.65rem', borderColor: 'rgba(34,197,94,0.4)', color: '#4ade80' }}
-                                            onClick={() => handleMarcarPagada(m.idIncidente)}
-                                        >
-                                            ✓ Marcar Pagada
-                                        </button>
+                                    {!m.pagado ? (
+                                        <>
+                                            <button
+                                                className="btn-secondary"
+                                                style={{ padding: '0.35rem 0.6rem', fontSize: '0.65rem' }}
+                                                onClick={() => handleAbrirEditar(m)}
+                                            >
+                                                ✎ Editar
+                                            </button>
+                                            <button
+                                                className="btn-secondary"
+                                                style={{ padding: '0.35rem 0.6rem', fontSize: '0.65rem', borderColor: 'rgba(34,197,94,0.4)', color: '#4ade80' }}
+                                                onClick={() => handleMarcarPagada(m.idIncidente)}
+                                            >
+                                                ✓ Marcar Pagada
+                                            </button>
+                                            <button
+                                                className="btn-danger"
+                                                style={{ padding: '0.35rem 0.6rem', fontSize: '0.65rem' }}
+                                                onClick={() => handleEliminar(m.idIncidente)}
+                                            >
+                                                Eliminar
+                                            </button>
+                                        </>
+                                    ) : (
+                                        <span style={{ fontSize: '0.72rem', color: '#4ade80', fontStyle: 'italic', padding: '0.2rem 0' }}>
+                                            ✓ Multa liquidada (registro histórico protegido)
+                                        </span>
                                     )}
-                                    <button
-                                        className="btn-danger"
-                                        style={{ padding: '0.35rem 0.6rem', fontSize: '0.65rem' }}
-                                        onClick={() => handleEliminar(m.idIncidente)}
-                                    >
-                                        Eliminar
-                                    </button>
                                 </div>
                             </div>
                         ))
@@ -289,14 +318,14 @@ export default function AdminMultas() {
                 </div>
             </div>
 
-            {/* Modal registrar multa */}
+            {/* Modal registrar o editar multa */}
             {isModalOpen && (
                 <div className="modal-overlay">
                     <div className="modal-content" style={{ maxWidth: '520px' }}>
                         <h2 style={{ marginBottom: '1.5rem', textAlign: 'center', fontSize: '1.4rem', fontWeight: '800' }}>
-                            Registrar Multa por Uso Indebido
+                            {multaEditando ? 'Editar Multa por Uso Indebido' : 'Registrar Multa por Uso Indebido'}
                         </h2>
-                        <form onSubmit={handleCrearMulta}>
+                        <form onSubmit={handleGuardarMulta}>
                             <div style={{ marginBottom: '1.2rem' }}>
                                 <label className="form-label">Reserva Afectada</label>
                                 <select
@@ -306,6 +335,11 @@ export default function AdminMultas() {
                                     onChange={e => setIdReserva(e.target.value)}
                                 >
                                     <option value="">Seleccione una reserva...</option>
+                                    {multaEditando && !reservas.some(r => r.idReserva === Number(idReserva)) && (
+                                        <option value={multaEditando.idReserva}>
+                                            #{multaEditando.idReserva} — {multaEditando.nombreRecurso} (Reserva actual)
+                                        </option>
+                                    )}
                                     {reservas.map(r => (
                                         <option key={r.idReserva} value={r.idReserva}>
                                             #{r.idReserva} — {r.recurso?.nombre ?? 'Recurso'} ({r.estadoReserva}) — {new Date(r.fechaInicio).toLocaleDateString('es-CO')}
@@ -313,7 +347,7 @@ export default function AdminMultas() {
                                     ))}
                                 </select>
                                 <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', marginTop: '0.3rem', display: 'block' }}>
-                                    Se enlaza el cargo a la reserva seleccionada.
+                                    {multaEditando ? 'Reasignar la reserva también trasladará el cargo al nuevo residente.' : 'Se enlaza el cargo a la reserva seleccionada.'}
                                 </span>
                             </div>
 
@@ -353,13 +387,13 @@ export default function AdminMultas() {
                             <div className="modal-footer" style={{ display: 'flex', justifyContent: 'flex-end', gap: '1rem' }}>
                                 <button
                                     type="button"
-                                    onClick={() => setIsModalOpen(false)}
+                                    onClick={() => { setIsModalOpen(false); setMultaEditando(null); }}
                                     style={{ background: 'transparent', color: 'var(--text-muted)', border: 'none', cursor: 'pointer', padding: '0.6rem 1.2rem' }}
                                 >
                                     Descartar
                                 </button>
                                 <button type="submit" className="btn-primary">
-                                    Registrar Multa
+                                    {multaEditando ? 'Guardar Cambios' : 'Registrar Multa'}
                                 </button>
                             </div>
                         </form>

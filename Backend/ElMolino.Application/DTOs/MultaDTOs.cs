@@ -22,4 +22,11 @@ namespace ElMolino.Application.DTOs
         public required string DescripcionDano { get; set; }
         public decimal MontoMulta { get; set; }
     }
+
+    public class EditarMultaRequestDto
+    {
+        public int IdReserva { get; set; }
+        public required string DescripcionDano { get; set; }
+        public decimal MontoMulta { get; set; }
+    }
 }

@@ -40,6 +40,21 @@ namespace ElMolino.API.Controllers
             }
         }
 
+        // PUT /api/multas/{id}
+        [HttpPut("{id}")]
+        public async Task<IActionResult> EditarMulta(int id, [FromBody] EditarMultaRequestDto request)
+        {
+            try
+            {
+                var multa = await _multaService.EditarMultaAsync(id, request);
+                return Ok(new { message = "Multa actualizada exitosamente.", multa });
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
         // PUT /api/multas/{id}/pagar
         [HttpPut("{id}/pagar")]
         public async Task<IActionResult> MarcarPagada(int id)
