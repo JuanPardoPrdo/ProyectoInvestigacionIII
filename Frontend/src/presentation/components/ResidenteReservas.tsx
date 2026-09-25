@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import '@/presentation/styles/dashboard.css';
+import { formatCurrency } from '@/presentation/utils/format';
 
 export default function ResidenteReservas({ userName }: { userName: string }) {
     const [reservas, setReservas] = useState<any[]>([]);
@@ -228,7 +229,7 @@ export default function ResidenteReservas({ userName }: { userName: string }) {
                                     <div style={{ display: 'flex', flexDirection: 'column' }}>
                                         <span style={{ fontSize: '0.55rem', color: 'var(--text-muted)', textTransform: 'uppercase' }}>Costo</span>
                                         <span style={{ color: '#a5b4fc', fontSize: '0.9rem', fontWeight: '800' }}>
-                                            ${res.costoTotal}
+                                            {formatCurrency(res.costoTotal)}
                                         </span>
                                     </div>
                                     <div style={{ display: 'flex', gap: '0.3rem' }}>
@@ -267,7 +268,7 @@ export default function ResidenteReservas({ userName }: { userName: string }) {
                                 >
                                     <option value="">Despliegue para seleccionar...</option>
                                     {recursos.map(r => (
-                                        <option key={r.idRecurso} value={r.idRecurso}>{r.nombre} (Tarifa: ${r.costoPorReserva})</option>
+                                        <option key={r.idRecurso} value={r.idRecurso}>{r.nombre} (Tarifa: {formatCurrency(r.costoPorReserva)})</option>
                                     ))}
                                 </select>
                             </div>

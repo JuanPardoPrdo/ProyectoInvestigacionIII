@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import '@/presentation/styles/dashboard.css';
+import { formatCurrency } from '@/presentation/utils/format';
 
 interface Recurso {
     idRecurso: number;
@@ -157,7 +158,7 @@ export default function AdminRecursos() {
                             <div style={{ marginBottom: '0.6rem' }}>
                                 <div className="resource-info" style={{ marginBottom: '0.2rem', fontSize: '0.75rem' }}>
                                     <span className="label">Costo:</span>
-                                    <span className="value">${r.costoPorReserva}</span>
+                                    <span className="value">{formatCurrency(r.costoPorReserva)}</span>
                                 </div>
                                 <div className="resource-info" style={{ fontSize: '0.75rem' }}>
                                     <span className="label">ID:</span>

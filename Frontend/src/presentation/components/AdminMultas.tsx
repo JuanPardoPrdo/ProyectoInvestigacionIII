@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import '@/presentation/styles/dashboard.css';
 import { Multa, CrearMultaDto, EditarMultaDto } from '@/domain/entities/Multa';
+import { formatCurrency } from '@/presentation/utils/format';
 
 interface ReservaResumen {
     idReserva: number;
@@ -153,9 +154,6 @@ export default function AdminMultas() {
 
     const montoPendiente = multas.filter(m => !m.pagado).reduce((acc, m) => acc + m.montoMulta, 0);
     const montoRecaudado = multas.filter(m => m.pagado).reduce((acc, m) => acc + m.montoMulta, 0);
-
-    const formatCurrency = (value: number) =>
-        new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(value);
 
     const formatFecha = (fecha: string) =>
         new Date(fecha).toLocaleDateString('es-CO', { year: 'numeric', month: 'short', day: 'numeric' });
