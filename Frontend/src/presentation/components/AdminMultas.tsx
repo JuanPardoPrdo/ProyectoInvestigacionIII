@@ -336,7 +336,7 @@ export default function AdminMultas() {
                                     className="form-input"
                                     type="number"
                                     min={1}
-                                    step={1000}
+                                    step="any"
                                     required
                                     value={montoMulta}
                                     onChange={e => setMontoMulta(e.target.value)}
