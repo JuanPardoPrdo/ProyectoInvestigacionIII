@@ -14,6 +14,7 @@ namespace ElMolino.Application.DTOs
         public bool Pagado { get; set; }
         public DateTime? FechaPago { get; set; }
         public int? IdMovimiento { get; set; }
+        public string? FotoEvidencia { get; set; }
     }
 
     public class CrearMultaRequestDto
@@ -21,6 +22,7 @@ namespace ElMolino.Application.DTOs
         public int IdReserva { get; set; }
         public required string DescripcionDano { get; set; }
         public decimal MontoMulta { get; set; }
+        public string? FotoEvidencia { get; set; }
     }
 
     public class EditarMultaRequestDto
@@ -28,5 +30,6 @@ namespace ElMolino.Application.DTOs
         public int IdReserva { get; set; }
         public required string DescripcionDano { get; set; }
         public decimal MontoMulta { get; set; }
+        public string? FotoEvidencia { get; set; }
     }
 }

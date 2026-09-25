@@ -14,6 +14,7 @@ export interface Recurso {
     tipo: string;
     costoPorReserva: number;
     estadoFisico: string;
+    fotoUrl?: string;
 }
 
 // Representa el Paz y Salvo

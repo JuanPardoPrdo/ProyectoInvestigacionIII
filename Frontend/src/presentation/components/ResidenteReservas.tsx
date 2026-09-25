@@ -24,8 +24,8 @@ export default function ResidenteReservas({ userName }: { userName: string }) {
     const fetchReservasYRecursos = async () => {
         try {
             const [resReservas, resRecursos] = await Promise.all([
-                fetch('/api/reservas').then(r => r.json()),
-                fetch('/api/recursos').then(r => r.json())
+                fetch(`/api/reservas?t=${Date.now()}`, { cache: 'no-store' }).then(r => r.json()),
+                fetch(`/api/recursos?t=${Date.now()}`, { cache: 'no-store' }).then(r => r.json())
             ]);
             setReservas(resReservas.reservas || []);
             setRecursos(resRecursos.recursos || []);
@@ -202,6 +202,15 @@ export default function ResidenteReservas({ userName }: { userName: string }) {
                     ) : (
                         filteredReservas.map((res: any) => (
                             <div key={res.idReserva} className="glass-card">
+                                {res.recurso?.fotoUrl && (
+                                    <div className="resource-thumbnail">
+                                        <img
+                                            src={res.recurso.fotoUrl}
+                                            alt={res.recurso.nombre}
+                                            loading="lazy"
+                                        />
+                                    </div>
+                                )}
                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.6rem' }}>
                                     <div>
                                         <h3 style={{ fontSize: '0.9rem', fontWeight: '700', marginBottom: '0px' }}>{res.recurso?.nombre}</h3>
@@ -271,6 +280,21 @@ export default function ResidenteReservas({ userName }: { userName: string }) {
                                         <option key={r.idRecurso} value={r.idRecurso}>{r.nombre} (Tarifa: {formatCurrency(r.costoPorReserva)})</option>
                                     ))}
                                 </select>
+                                {(() => {
+                                    const selectedRecurso = recursos.find((r: any) => r.idRecurso.toString() === idRecurso);
+                                    if (selectedRecurso && selectedRecurso.fotoUrl) {
+                                        return (
+                                            <div className="selected-resource-preview">
+                                                <img src={selectedRecurso.fotoUrl} alt={selectedRecurso.nombre} className="selected-resource-img" />
+                                                <div>
+                                                    <div style={{ fontWeight: 600, fontSize: '0.85rem', color: '#fff' }}>{selectedRecurso.nombre}</div>
+                                                    <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{selectedRecurso.tipo} • Tarifa: {formatCurrency(selectedRecurso.costoPorReserva)}</div>
+                                                </div>
+                                            </div>
+                                        );
+                                    }
+                                    return null;
+                                })()}
                             </div>
 
                             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.2rem', marginBottom: '1.2rem' }}>

@@ -23,7 +23,8 @@ namespace ElMolino.Application.Services
                     Nombre = r.Nombre,
                     Tipo = r.Tipo,
                     CostoPorReserva = r.CostoPorReserva,
-                    EstadoFisico = r.EstadoFisico
+                    EstadoFisico = r.EstadoFisico,
+                    FotoUrl = r.FotoUrl
                 }).ToListAsync();
         }
 
@@ -54,7 +55,8 @@ namespace ElMolino.Application.Services
                         Nombre = r.Recurso.Nombre,
                         Tipo = r.Recurso.Tipo,
                         CostoPorReserva = r.Recurso.CostoPorReserva,
-                        EstadoFisico = r.Recurso.EstadoFisico
+                        EstadoFisico = r.Recurso.EstadoFisico,
+                        FotoUrl = r.Recurso.FotoUrl
                     }
                 }).ToListAsync();
         }

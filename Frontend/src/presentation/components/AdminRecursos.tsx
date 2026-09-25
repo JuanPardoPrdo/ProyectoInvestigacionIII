@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import '@/presentation/styles/dashboard.css';
 import { formatCurrency } from '@/presentation/utils/format';
+import { processImageFile } from '@/presentation/utils/image';
 
 interface Recurso {
     idRecurso: number;
@@ -10,6 +11,7 @@ interface Recurso {
     tipo: string;
     costoPorReserva: number;
     estadoFisico: string;
+    fotoUrl?: string;
 }
 
 export default function AdminRecursos() {
@@ -24,10 +26,11 @@ export default function AdminRecursos() {
     const [tipo, setTipo] = useState('');
     const [costo, setCosto] = useState(0);
     const [estado, setEstado] = useState('Disponible');
+    const [fotoUrl, setFotoUrl] = useState('');
 
     const fetchRecursos = async () => {
         try {
-            const res = await fetch('/api/recursos');
+            const res = await fetch(`/api/recursos?t=${Date.now()}`, { cache: 'no-store' });
             const data = await res.json();
             setRecursos(data.recursos || []);
         } catch (err) {
@@ -46,6 +49,7 @@ export default function AdminRecursos() {
         setTipo('');
         setCosto(0);
         setEstado('Disponible');
+        setFotoUrl('');
         setIdRecursoEditando(null);
         setError('');
     };
@@ -64,7 +68,8 @@ export default function AdminRecursos() {
                     nombre,
                     tipo,
                     costoPorReserva: costo,
-                    estadoFisico: estado
+                    estadoFisico: estado,
+                    fotoUrl: fotoUrl || null
                 })
             });
 
@@ -74,9 +79,18 @@ export default function AdminRecursos() {
                 return;
             }
 
+            // Actualización optimista inmediata en memoria para reflejar cambios sin demoras de caché
+            if (idRecursoEditando) {
+                setRecursos(prev => prev.map(item =>
+                    item.idRecurso === idRecursoEditando
+                        ? { ...item, nombre, tipo, costoPorReserva: costo, estadoFisico: estado, fotoUrl: fotoUrl || undefined }
+                        : item
+                ));
+            }
+
             setIsModalOpen(false);
             resetForm();
-            fetchRecursos();
+            await fetchRecursos();
         } catch (err) {
             setError('Error al procesar la solicitud');
         }
@@ -88,6 +102,7 @@ export default function AdminRecursos() {
         setTipo(r.tipo);
         setCosto(r.costoPorReserva);
         setEstado(r.estadoFisico);
+        setFotoUrl(r.fotoUrl || '');
         setIsModalOpen(true);
     };
 
@@ -145,6 +160,30 @@ export default function AdminRecursos() {
                 <div className="card-grid">
                     {recursos.map(r => (
                         <div key={r.idRecurso} className="glass-card resource-card">
+                            {r.fotoUrl ? (
+                                <div className="resource-thumbnail">
+                                    <img
+                                        src={r.fotoUrl}
+                                        alt={r.nombre}
+                                        loading="lazy"
+                                    />
+                                </div>
+                            ) : (
+                                <div
+                                    className="resource-thumbnail"
+                                    style={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        background: 'rgba(255, 255, 255, 0.02)',
+                                        color: 'var(--text-muted)',
+                                        fontSize: '0.75rem',
+                                        border: '1px dashed var(--glass-border)'
+                                    }}
+                                >
+                                    <span>📷 Sin foto asignada</span>
+                                </div>
+                            )}
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.6rem' }}>
                                 <div>
                                     <h3 style={{ fontSize: '0.9rem', fontWeight: '700' }}>{r.nombre}</h3>
@@ -166,7 +205,7 @@ export default function AdminRecursos() {
                                 </div>
                             </div>
 
-                            <div className="card-actions" style={{ paddingTop: '0.6rem', gap: '0.4rem' }}>
+                            <div className="card-actions" style={{ paddingTop: '0.6rem', gap: '0.4rem', marginTop: 'auto' }}>
                                 <button className="btn-secondary" style={{ padding: '0.35rem 0.6rem', fontSize: '0.65rem' }} onClick={() => handleEdit(r)}>Editar</button>
                                 <button className="btn-danger" style={{ padding: '0.35rem 0.6rem', fontSize: '0.65rem' }} onClick={() => handleDelete(r.idRecurso)}>Eliminar</button>
                             </div>
@@ -203,6 +242,39 @@ export default function AdminRecursos() {
                                     <option value="Cancha Deportiva">Cancha Deportiva</option>
                                     <option value="Salud y Bienestar">Salud y Bienestar</option>
                                 </select>
+                            </div>
+
+                            <div style={{ marginBottom: '1.2rem' }}>
+                                <label className="form-label">Foto del Espacio (Opcional)</label>
+                                <input
+                                    className="form-input"
+                                    type="file"
+                                    accept="image/*"
+                                    style={{ padding: '0.45rem', fontSize: '0.8rem', cursor: 'pointer' }}
+                                    onChange={async (e) => {
+                                        const file = e.target.files?.[0];
+                                        if (file) {
+                                            try {
+                                                const base64 = await processImageFile(file);
+                                                setFotoUrl(base64);
+                                            } catch (err) {
+                                                console.error('Error procesando imagen', err);
+                                            }
+                                        }
+                                    }}
+                                />
+                                {fotoUrl && (
+                                    <div className="image-upload-preview" style={{ marginTop: '0.6rem' }}>
+                                        <img src={fotoUrl} alt="Vista previa del espacio" />
+                                        <button
+                                            type="button"
+                                            className="image-remove-btn"
+                                            onClick={() => setFotoUrl('')}
+                                        >
+                                            ✕ Quitar foto
+                                        </button>
+                                    </div>
+                                )}
                             </div>
 
                             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1.5rem' }}>

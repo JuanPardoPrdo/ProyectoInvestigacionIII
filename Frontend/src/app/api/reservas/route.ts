@@ -41,6 +41,9 @@ export async function POST(req: NextRequest) {
     }
 }
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 export async function GET(req: NextRequest) {
     try {
         const session = await getSession();
@@ -53,7 +56,8 @@ export async function GET(req: NextRequest) {
             headers: {
                 'Authorization': `Bearer ${session.user.token}`,
                 'Content-Type': 'application/json'
-            }
+            },
+            cache: 'no-store'
         });
 
         if (!netResponse.ok) {
@@ -61,7 +65,15 @@ export async function GET(req: NextRequest) {
         }
 
         const data = await netResponse.json();
-        return NextResponse.json({ reservas: data.reservas }, { status: 200 });
+        return NextResponse.json(
+            { reservas: data.reservas },
+            {
+                status: 200,
+                headers: {
+                    'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate'
+                }
+            }
+        );
 
     } catch (err: any) {
         return NextResponse.json({ message: 'Error interno del proxy de Next.' }, { status: 500 });

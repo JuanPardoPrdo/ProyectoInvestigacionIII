@@ -23,7 +23,8 @@ namespace ElMolino.Application.Services
                     Nombre = r.Nombre,
                     Tipo = r.Tipo,
                     CostoPorReserva = r.CostoPorReserva,
-                    EstadoFisico = r.EstadoFisico
+                    EstadoFisico = r.EstadoFisico,
+                    FotoUrl = r.FotoUrl
                 })
                 .ToListAsync();
         }
@@ -35,7 +36,8 @@ namespace ElMolino.Application.Services
                 Nombre = request.Nombre,
                 Tipo = request.Tipo,
                 CostoPorReserva = request.CostoPorReserva,
-                EstadoFisico = request.EstadoFisico
+                EstadoFisico = request.EstadoFisico,
+                FotoUrl = request.FotoUrl
             };
 
             _context.Recursos.Add(r);
@@ -47,7 +49,8 @@ namespace ElMolino.Application.Services
                 Nombre = r.Nombre,
                 Tipo = r.Tipo,
                 CostoPorReserva = r.CostoPorReserva,
-                EstadoFisico = r.EstadoFisico
+                EstadoFisico = r.EstadoFisico,
+                FotoUrl = r.FotoUrl
             };
         }
 
@@ -60,6 +63,7 @@ namespace ElMolino.Application.Services
             r.Tipo = request.Tipo;
             r.CostoPorReserva = request.CostoPorReserva;
             r.EstadoFisico = request.EstadoFisico;
+            r.FotoUrl = request.FotoUrl;
 
             await _context.SaveChangesAsync();
         }

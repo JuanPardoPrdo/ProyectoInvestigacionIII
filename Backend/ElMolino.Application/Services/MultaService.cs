@@ -48,7 +48,8 @@ namespace ElMolino.Application.Services
                     FechaReporte = inc.FechaReporte,
                     Pagado = movimiento?.Pagado ?? false,
                     FechaPago = movimiento?.FechaPago,
-                    IdMovimiento = inc.IdMovimiento
+                    IdMovimiento = inc.IdMovimiento,
+                    FotoEvidencia = inc.FotoEvidencia
                 });
             }
 
@@ -88,7 +89,8 @@ namespace ElMolino.Application.Services
                 DescripcionDano = request.DescripcionDano,
                 CostoReparacion = request.MontoMulta,
                 FechaReporte = DateTime.UtcNow,
-                IdMovimiento = movimiento.IdMovimiento
+                IdMovimiento = movimiento.IdMovimiento,
+                FotoEvidencia = request.FotoEvidencia
             };
 
             _context.Incidentes.Add(incidente);
@@ -107,7 +109,8 @@ namespace ElMolino.Application.Services
                 FechaReporte = incidente.FechaReporte,
                 Pagado = false,
                 FechaPago = null,
-                IdMovimiento = incidente.IdMovimiento
+                IdMovimiento = incidente.IdMovimiento,
+                FotoEvidencia = incidente.FotoEvidencia
             };
         }
 
@@ -162,6 +165,7 @@ namespace ElMolino.Application.Services
 
             incidente.DescripcionDano = request.DescripcionDano.Trim();
             incidente.CostoReparacion = request.MontoMulta;
+            incidente.FotoEvidencia = request.FotoEvidencia;
 
             if (movimiento != null)
             {
@@ -183,7 +187,8 @@ namespace ElMolino.Application.Services
                 FechaReporte = incidente.FechaReporte,
                 Pagado = movimiento?.Pagado ?? false,
                 FechaPago = movimiento?.FechaPago,
-                IdMovimiento = incidente.IdMovimiento
+                IdMovimiento = incidente.IdMovimiento,
+                FotoEvidencia = incidente.FotoEvidencia
             };
         }
 

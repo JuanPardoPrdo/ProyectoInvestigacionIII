@@ -7,6 +7,7 @@ namespace ElMolino.Application.DTOs
         public required string Tipo { get; set; }
         public decimal CostoPorReserva { get; set; }
         public required string EstadoFisico { get; set; }
+        public string? FotoUrl { get; set; }
     }
 
     public class ReservaDto

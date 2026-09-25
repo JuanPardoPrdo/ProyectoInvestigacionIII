@@ -28,5 +28,10 @@ yarn-error.log*
 .pnpm-debug.log*
 .dotnet/
 .local/
-Library/
 *.tsbuildinfo
+
+# Media and documentation
+*.mp4
+*.xlsx
+*.pdf
+Library/

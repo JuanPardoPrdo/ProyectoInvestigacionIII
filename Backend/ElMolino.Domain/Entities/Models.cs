@@ -45,6 +45,7 @@ namespace ElMolino.Domain.Entities
         public required string Tipo { get; set; }
         public decimal CostoPorReserva { get; set; } = 0;
         public string EstadoFisico { get; set; } = "Disponible";
+        public string? FotoUrl { get; set; }
 
         public ICollection<Reserva> Reservas { get; set; } = new List<Reserva>();
     }
@@ -73,6 +74,7 @@ namespace ElMolino.Domain.Entities
         public decimal CostoReparacion { get; set; }
         public DateTime FechaReporte { get; set; } = new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         public int? IdMovimiento { get; set; }
+        public string? FotoEvidencia { get; set; }
 
         public Reserva Reserva { get; set; } = null!;
     }

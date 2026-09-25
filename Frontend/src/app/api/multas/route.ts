@@ -1,6 +1,9 @@
 import { NextResponse, NextRequest } from 'next/server';
 import { getSession } from '@/infrastructure/auth/getServerSession';
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 export async function GET() {
     try {
         const session = await getSession();
@@ -13,11 +16,17 @@ export async function GET() {
             headers: {
                 'Authorization': `Bearer ${session.user.token}`,
                 'Content-Type': 'application/json'
-            }
+            },
+            cache: 'no-store'
         });
 
         const data = await netResponse.json();
-        return NextResponse.json(data, { status: netResponse.status });
+        return NextResponse.json(data, {
+            status: netResponse.status,
+            headers: {
+                'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate'
+            }
+        });
 
     } catch (err: any) {
         return NextResponse.json({ message: 'Error interno del proxy de Next.' }, { status: 500 });

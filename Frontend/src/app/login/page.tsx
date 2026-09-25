@@ -50,6 +50,18 @@ export default function LoginPage() {
             <div className="bg-circle bg-circle-2"></div>
 
             <div className="login-container">
+                <div className="login-banner">
+                    <img
+                        src="/condo-facade.jpg"
+                        alt="Conjunto Residencial El Molino"
+                        className="login-banner-img"
+                    />
+                    <div className="login-banner-overlay"></div>
+                    <div className="login-banner-badge">
+                        <span>Conjunto Residencial</span>
+                    </div>
+                </div>
+
                 <div className="login-header">
                     <h1>El Molino</h1>
                     <p>Portal de Reservas Residencial</p>

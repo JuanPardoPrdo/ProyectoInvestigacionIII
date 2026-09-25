@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import '@/presentation/styles/dashboard.css';
 import { Multa, CrearMultaDto, EditarMultaDto } from '@/domain/entities/Multa';
 import { formatCurrency } from '@/presentation/utils/format';
+import { processImageFile } from '@/presentation/utils/image';
 
 interface ReservaResumen {
     idReserva: number;
@@ -29,6 +30,8 @@ export default function AdminMultas() {
     const [idReserva, setIdReserva] = useState<number | string>('');
     const [descripcionDano, setDescripcionDano] = useState('');
     const [montoMulta, setMontoMulta] = useState<number | string>('');
+    const [fotoEvidencia, setFotoEvidencia] = useState<string>('');
+    const [fotoLightbox, setFotoLightbox] = useState<string | null>(null);
     const [error, setError] = useState('');
 
     const fetchDatos = async () => {
@@ -55,6 +58,7 @@ export default function AdminMultas() {
         setIdReserva('');
         setDescripcionDano('');
         setMontoMulta('');
+        setFotoEvidencia('');
         setError('');
         setIsModalOpen(true);
     };
@@ -64,6 +68,7 @@ export default function AdminMultas() {
         setIdReserva(m.idReserva);
         setDescripcionDano(m.descripcionDano);
         setMontoMulta(m.montoMulta);
+        setFotoEvidencia(m.fotoEvidencia || '');
         setError('');
         setIsModalOpen(true);
     };
@@ -89,7 +94,8 @@ export default function AdminMultas() {
             const payload: CrearMultaDto | EditarMultaDto = {
                 idReserva: Number(idReserva),
                 descripcionDano: descripcionDano.trim(),
-                montoMulta: Number(montoMulta)
+                montoMulta: Number(montoMulta),
+                fotoEvidencia: fotoEvidencia || undefined
             };
 
             const isEditing = multaEditando !== null;
@@ -263,6 +269,16 @@ export default function AdminMultas() {
                                         <span className="label">Descripción:</span>
                                         <span className="value" style={{ fontSize: '0.72rem', fontStyle: 'italic', color: '#cbd5e1' }}>{m.descripcionDano}</span>
                                     </div>
+                                    {m.fotoEvidencia && (
+                                        <div
+                                            className="evidence-thumbnail"
+                                            onClick={() => setFotoLightbox(m.fotoEvidencia!)}
+                                            title="Clic para ver evidencia fotográfica ampliada"
+                                        >
+                                            <img src={m.fotoEvidencia} alt="Evidencia del daño" />
+                                            <span className="evidence-badge">📷 Ver Evidencia</span>
+                                        </div>
+                                    )}
                                     <div className="resource-info" style={{ marginBottom: '0.25rem', fontSize: '0.75rem' }}>
                                         <span className="label">Monto:</span>
                                         <span className="value" style={{ color: '#fbbf24', fontWeight: 700 }}>{formatCurrency(m.montoMulta)}</span>
@@ -362,7 +378,7 @@ export default function AdminMultas() {
                                 />
                             </div>
 
-                            <div style={{ marginBottom: '1.5rem' }}>
+                            <div style={{ marginBottom: '1.2rem' }}>
                                 <label className="form-label">Monto de la Multa (COP)</label>
                                 <input
                                     className="form-input"
@@ -374,6 +390,39 @@ export default function AdminMultas() {
                                     onChange={e => setMontoMulta(e.target.value)}
                                     placeholder="Ej: 150000"
                                 />
+                            </div>
+
+                            <div style={{ marginBottom: '1.5rem' }}>
+                                <label className="form-label">Foto de Evidencia (Daño / Infracción — Opcional)</label>
+                                <input
+                                    className="form-input"
+                                    type="file"
+                                    accept="image/*"
+                                    style={{ padding: '0.45rem', fontSize: '0.8rem', cursor: 'pointer' }}
+                                    onChange={async (e) => {
+                                        const file = e.target.files?.[0];
+                                        if (file) {
+                                            try {
+                                                const base64 = await processImageFile(file);
+                                                setFotoEvidencia(base64);
+                                            } catch (err) {
+                                                console.error('Error procesando imagen', err);
+                                            }
+                                        }
+                                    }}
+                                />
+                                {fotoEvidencia && (
+                                    <div className="image-upload-preview" style={{ marginTop: '0.6rem' }}>
+                                        <img src={fotoEvidencia} alt="Evidencia de daño" />
+                                        <button
+                                            type="button"
+                                            className="image-remove-btn"
+                                            onClick={() => setFotoEvidencia('')}
+                                        >
+                                            ✕ Quitar foto
+                                        </button>
+                                    </div>
+                                )}
                             </div>
 
                             {error && (
@@ -395,6 +444,58 @@ export default function AdminMultas() {
                                 </button>
                             </div>
                         </form>
+                    </div>
+                </div>
+            )}
+
+            {/* Modal Lightbox para Inspeccionar Evidencia Fotográfica */}
+            {fotoLightbox && (
+                <div
+                    className="modal-overlay"
+                    onClick={() => setFotoLightbox(null)}
+                    style={{ zIndex: 120, cursor: 'zoom-out', backdropFilter: 'blur(8px)', background: 'rgba(0, 0, 0, 0.75)' }}
+                >
+                    <div
+                        style={{ maxWidth: '90vw', maxHeight: '85vh', position: 'relative' }}
+                        onClick={e => e.stopPropagation()}
+                    >
+                        <img
+                            src={fotoLightbox}
+                            alt="Evidencia fotográfica ampliada"
+                            style={{
+                                maxWidth: '100%',
+                                maxHeight: '80vh',
+                                borderRadius: '14px',
+                                objectFit: 'contain',
+                                border: '1px solid var(--glass-border)',
+                                boxShadow: '0 20px 45px rgba(0,0,0,0.8)'
+                            }}
+                        />
+                        <button
+                            type="button"
+                            onClick={() => setFotoLightbox(null)}
+                            style={{
+                                position: 'absolute',
+                                top: '-14px',
+                                right: '-14px',
+                                background: '#ef4444',
+                                color: 'white',
+                                border: '2px solid white',
+                                borderRadius: '50%',
+                                width: '32px',
+                                height: '32px',
+                                fontSize: '1rem',
+                                fontWeight: 'bold',
+                                cursor: 'pointer',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                boxShadow: '0 4px 12px rgba(0,0,0,0.5)'
+                            }}
+                            title="Cerrar vista previa"
+                        >
+                            ✕
+                        </button>
                     </div>
                 </div>
             )}

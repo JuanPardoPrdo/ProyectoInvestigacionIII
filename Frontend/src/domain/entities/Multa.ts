@@ -11,16 +11,19 @@ export interface Multa {
     pagado: boolean;
     fechaPago?: string;
     idMovimiento?: number;
+    fotoEvidencia?: string;
 }
 
 export interface CrearMultaDto {
     idReserva: number;
     descripcionDano: string;
     montoMulta: number;
+    fotoEvidencia?: string;
 }
 
 export interface EditarMultaDto {
     idReserva: number;
     descripcionDano: string;
     montoMulta: number;
+    fotoEvidencia?: string;
 }
