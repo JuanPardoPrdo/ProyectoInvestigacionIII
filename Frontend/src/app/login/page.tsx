@@ -106,6 +106,22 @@ export default function LoginPage() {
                         <span className="btn-text">Iniciar Sesión</span>
                         <span className="loading-spinner"></span>
                     </button>
+
+                    <div style={{ textAlign: 'center', marginTop: '1rem' }}>
+                        <a
+                            href="/forgot-password"
+                            style={{
+                                color: 'var(--text-muted)',
+                                fontSize: '0.82rem',
+                                textDecoration: 'none',
+                                transition: 'color 0.2s'
+                            }}
+                            onMouseOver={e => (e.currentTarget.style.color = '#a5b4fc')}
+                            onMouseOut={e => (e.currentTarget.style.color = 'var(--text-muted)')}
+                        >
+                            ¿Olvidaste tu contraseña?
+                        </a>
+                    </div>
                 </form>
             </div>
         </div>

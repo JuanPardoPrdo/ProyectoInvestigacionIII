@@ -19,6 +19,8 @@ namespace ElMolino.Domain.Entities
         public string? Email { get; set; }
         public string? PasswordHash { get; set; }
         public int Estado { get; set; } = 1;
+        public string? ResetToken { get; set; }
+        public DateTime? ResetTokenExpiry { get; set; }
 
         public Unidad Unidad { get; set; } = null!;
         public ICollection<EstadoCuenta> EstadosCuenta { get; set; } = new List<EstadoCuenta>();

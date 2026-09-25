@@ -13,4 +13,15 @@ namespace ElMolino.Application.DTOs
         public required string Rol { get; set; }
         public required string Token { get; set; }
     }
+
+    public class SolicitarResetDto
+    {
+        public required string Email { get; set; }
+    }
+
+    public class ConfirmarResetDto
+    {
+        public required string Token { get; set; }
+        public required string NuevaPassword { get; set; }
+    }
 }
